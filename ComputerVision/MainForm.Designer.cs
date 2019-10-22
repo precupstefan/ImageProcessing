@@ -32,12 +32,12 @@ namespace ComputerVision
             this.panelDestination = new System.Windows.Forms.Panel();
             this.buttonLoad = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonEqualization = new System.Windows.Forms.Button();
             this.buttonNegativare = new System.Windows.Forms.Button();
             this.buttonGrayscale = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.trackBarDelta = new System.Windows.Forms.TrackBar();
             this.trackBarIntensity = new System.Windows.Forms.TrackBar();
-            this.buttonEgalizare = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDelta)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarIntensity)).BeginInit();
@@ -76,13 +76,23 @@ namespace ComputerVision
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.buttonEgalizare);
+            this.panel1.Controls.Add(this.buttonEqualization);
             this.panel1.Controls.Add(this.buttonNegativare);
             this.panel1.Controls.Add(this.buttonGrayscale);
             this.panel1.Location = new System.Drawing.Point(348, 271);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(320, 190);
             this.panel1.TabIndex = 3;
+            // 
+            // buttonEqualization
+            // 
+            this.buttonEqualization.Location = new System.Drawing.Point(7, 97);
+            this.buttonEqualization.Name = "buttonEqualization";
+            this.buttonEqualization.Size = new System.Drawing.Size(75, 23);
+            this.buttonEqualization.TabIndex = 15;
+            this.buttonEqualization.Text = "Equalization";
+            this.buttonEqualization.UseVisualStyleBackColor = true;
+            this.buttonEqualization.Click += new System.EventHandler(this.ButtonEqualization_Click);
             // 
             // buttonNegativare
             // 
@@ -124,16 +134,6 @@ namespace ComputerVision
             this.trackBarIntensity.TabIndex = 5;
             this.trackBarIntensity.ValueChanged += new System.EventHandler(this.TrackBarIntensity_ValueChanged);
             // 
-            // buttonEgalizare
-            // 
-            this.buttonEgalizare.Location = new System.Drawing.Point(7, 97);
-            this.buttonEgalizare.Name = "buttonEgalizare";
-            this.buttonEgalizare.Size = new System.Drawing.Size(75, 23);
-            this.buttonEgalizare.TabIndex = 15;
-            this.buttonEgalizare.Text = "Egalizare";
-            this.buttonEgalizare.UseVisualStyleBackColor = true;
-            this.buttonEgalizare.Click += new System.EventHandler(this.ButtonEgalizare_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -166,7 +166,7 @@ namespace ComputerVision
         private System.Windows.Forms.Button buttonNegativare;
         private System.Windows.Forms.TrackBar trackBarDelta;
         private System.Windows.Forms.TrackBar trackBarIntensity;
-        private System.Windows.Forms.Button buttonEgalizare;
+        private System.Windows.Forms.Button buttonEqualization;
     }
 }
 

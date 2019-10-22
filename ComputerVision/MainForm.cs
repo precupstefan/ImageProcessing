@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ComputerVision.Entities;
+using ComputerVision.Logic;
 
 namespace ComputerVision
 {
@@ -23,6 +25,7 @@ namespace ComputerVision
             openFileDialog.ShowDialog();
             sSourceFileName = openFileDialog.FileName;
             panelSource.BackgroundImage = new Bitmap(sSourceFileName);
+
             image = new Bitmap(sSourceFileName);
             workImage = new FastImage(image);
 
@@ -32,71 +35,30 @@ namespace ComputerVision
 
         private void GrayScaleClick(object sender, EventArgs e)
         {
-            Color color;
+            Methods.GrayScaleFastImage(workImage);
 
-            workImage.Lock();
-            for (int i = 0; i < workImage.Width; i++)
-            {
-                for (int j = 0; j < workImage.Height; j++)
-                {
-                    color = workImage.GetPixel(i, j);
-                    byte R = color.R;
-                    byte G = color.G;
-                    byte B = color.B;
-
-                    byte average = (byte)((R + G + B) / 3);
-
-                    color = Color.FromArgb(average, average, average);
-
-                    workImage.SetPixel(i, j, color);
-                }
-            }
-
-            panelDestination.BackgroundImage = null;
-            panelDestination.BackgroundImage = workImage.GetBitMap();
-            workImage.Unlock();
+            UpdateWorkImage();
         }
 
         private void NegateClick(object sender, EventArgs e)
         {
-            Color color;
+            Methods.NegateFastImage(workImage);
 
-            workImage.Lock();
-            for (int i = 0; i < workImage.Width; i++)
-            {
-                for (int j = 0; j < workImage.Height; j++)
-                {
-                    color = workImage.GetPixel(i, j);
-
-                    var redNew = (byte)(255 - color.R);
-                    var greenNew = (byte)(255 - color.G);
-                    var blueNew = (byte)(255 - color.B);
-
-                    color = Color.FromArgb(redNew, greenNew, blueNew);
-
-                    workImage.SetPixel(i, j, color);
-                }
-            }
-
-            panelDestination.BackgroundImage = null;
-            panelDestination.BackgroundImage = workImage.GetBitMap();
-            workImage.Unlock();
+            UpdateWorkImage(); ;
         }
 
         private void TrackBarDelta_ValueChanged(object sender, EventArgs e)
         {
             var deltaValue = trackBarDelta.Value;
 
-            Color color;
-
             workImage.Lock();
             initialWorkImage.Lock();
 
-            for (int i = 0; i < workImage.Width; i++)
+            for (var i = 0; i < workImage.Width; i++)
             {
-                for (int j = 0; j < workImage.Height; j++)
+                for (var j = 0; j < workImage.Height; j++)
                 {
-                    color = initialWorkImage.GetPixel(i, j);
+                    var color = initialWorkImage.GetPixel(i, j);
 
                     var redNew = GetColorBasedOnDelta(color.R, deltaValue);
                     var greenNew = GetColorBasedOnDelta(color.G, deltaValue);
@@ -108,8 +70,7 @@ namespace ComputerVision
                 }
             }
 
-            panelDestination.BackgroundImage = null;
-            panelDestination.BackgroundImage = workImage.GetBitMap();
+            UpdateWorkImage();
 
             workImage.Unlock();
             initialWorkImage.Unlock();
@@ -144,67 +105,18 @@ namespace ComputerVision
 
         private void TrackBarIntensity_ValueChanged(object sender, EventArgs e)
         {
-            byte minR = 255;
-            byte maxR = 0;
-
-            byte minG = 255;
-            byte maxG = 0;
-
-            byte minB = 255;
-            byte maxB = 0;
-
-            workImage.Lock();
-            initialWorkImage.Lock();
-
-            Color color;
-
-            // Get min and max values for R G B
-            for (int i = 0; i < initialWorkImage.Width; i++)
-            {
-                for (int j = 0; j < initialWorkImage.Height; j++)
-                {
-                    color = initialWorkImage.GetPixel(i, j);
-
-                    // Update red min and max
-                    if (color.R < minR)
-                    {
-                        minR = color.R;
-                    }
-
-                    if (color.R > maxR)
-                    {
-                        maxR = color.R;
-                    }
-
-                    // Update green min and max
-                    if (color.G < minG)
-                    {
-                        minG = color.G;
-                    }
-
-                    if (color.G > maxG)
-                    {
-                        maxG = color.G;
-                    }
-
-                    // Update blue min and max
-                    if (color.B < minB)
-                    {
-                        minB = color.B;
-                    }
-
-                    if (color.B > maxB)
-                    {
-                        maxB = color.B;
-                    }
-                }
-            }
-
             panelDestination.BackgroundImage = null;
             panelDestination.BackgroundImage = workImage.GetBitMap();
 
             workImage.Unlock();
             initialWorkImage.Unlock();
+
+            var minR = initialWorkImage.RedMinimumValue;
+            var maxR = initialWorkImage.RedMaximumValue;
+            var minG = initialWorkImage.GreenMinimumValue;
+            var maxG = initialWorkImage.GreenMaximumValue;
+            var minB = initialWorkImage.BlueMinimumValue;
+            var maxB = initialWorkImage.BlueMaximumValue;
 
             var delta = trackBarIntensity.Value;
             var redA = GetA(minR, delta);
@@ -214,9 +126,9 @@ namespace ComputerVision
             var blueA = GetA(minB, delta);
             var blueB = GetB(maxB, delta);
 
-            for (int i = 0; i < initialWorkImage.Width; i++)
+            for (var i = 0; i < initialWorkImage.Width; i++)
             {
-                for (int j = 0; j < initialWorkImage.Height; j++)
+                for (var j = 0; j < initialWorkImage.Height; j++)
                 {
                     var oldRed = initialWorkImage.GetPixel(i, j).R;
                     var newRed = (redB - redA) * (oldRed - minR) / (maxR - minR) + redA;
@@ -260,7 +172,7 @@ namespace ComputerVision
             }
         }
 
-        private void ButtonEgalizare_Click(object sender, EventArgs e)
+        private void ButtonEqualization_Click(object sender, EventArgs e)
         {
             panelDestination.BackgroundImage = null;
             panelDestination.BackgroundImage = workImage.GetBitMap();
@@ -269,21 +181,22 @@ namespace ComputerVision
             var newGrayScaleHistogram = new int[256];
             newGrayScaleHistogram[0] = oldGrayScaleHistogram[0];
 
-            for (int i = 1; i < oldGrayScaleHistogram.Length; i++)
+            for (var i = 1; i < oldGrayScaleHistogram.Length; i++)
             {
                 newGrayScaleHistogram[i] = newGrayScaleHistogram[i - 1] + oldGrayScaleHistogram[i];
             }
 
             var transf = new int[256];
-            for (int i = 0; i < transf.Length; i++)
+            for (var i = 0; i < transf.Length; i++)
             {
                 transf[i] = (newGrayScaleHistogram[i] * 255) / (initialWorkImage.Width * initialWorkImage.Height);
             }
 
             workImage.Lock();
-            for (int i = 0; i < workImage.Width; i++)
+
+            for (var i = 0; i < workImage.Width; i++)
             {
-                for (int j = 0; j < workImage.Height; j++)
+                for (var j = 0; j < workImage.Height; j++)
                 {
                     var color = initialWorkImage.GetPixel(i, j);
                     var gray = (color.R + color.G + color.B) / 3;
@@ -292,7 +205,14 @@ namespace ComputerVision
                     workImage.SetPixel(i, j, newColor);
                 }
             }
+
             workImage.Unlock();
+        }
+
+        private void UpdateWorkImage()
+        {
+            panelDestination.BackgroundImage = null;
+            panelDestination.BackgroundImage = workImage.GetBitMap();
         }
 
         //private int GetIntensity(byte min, byte max, int a, int b)
