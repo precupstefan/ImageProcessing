@@ -178,7 +178,7 @@ namespace ComputerVision.Logic
 
             for (int row = 1; row < originalFastImage.Width - 2; row++)
             {
-                for (int column = 0; column < originalFastImage.Height; column++)
+                for (int column = 1; column < originalFastImage.Height - 2; column++)
                 {
                     var sumRed = 0;
                     var sumGreen = 0;
@@ -206,7 +206,7 @@ namespace ComputerVision.Logic
             }
 
             fastImage.Unlock();
-            fastImage.Unlock();
+            originalFastImage.Unlock();
         }
 
         private static int[,] GetLowPassFilterMatrix(int n)
