@@ -36,7 +36,7 @@ namespace ComputerVision.Entities
         private BitmapData bitmapData = null;
         private Color color;
         private Point size;
-        private int currentBitmapWidth = 0;
+        private readonly int currentBitmapWidth = 0;
 
         public FastImage(Bitmap bitmap)
         {
@@ -47,6 +47,8 @@ namespace ComputerVision.Entities
             currentBitmapWidth = size.X;
 
             Locked = false;
+
+            UpdateColorMinimumAndMaximumValues();
         }
 
         public void Lock(bool update = true)
@@ -89,7 +91,7 @@ namespace ComputerVision.Entities
             {
                 PixelData* pBase = (PixelData*)bitmapData.Scan0;
                 PixelData* pPixel = pBase + row * currentBitmapWidth + col;
-                color = Color.FromArgb(pPixel->red, pPixel->green, pPixel->blue);
+                color = Color.FromArgb(pPixel->Red, pPixel->Green, pPixel->Blue);
             }
 
             return color;
@@ -106,9 +108,9 @@ namespace ComputerVision.Entities
             {
                 PixelData* pBase = (PixelData*)bitmapData.Scan0;
                 PixelData* pPixel = pBase + row * currentBitmapWidth + col;
-                pPixel->red = c.R;
-                pPixel->green = c.G;
-                pPixel->blue = c.B;
+                pPixel->Red = c.R;
+                pPixel->Green = c.G;
+                pPixel->Blue = c.B;
             }
         }
 
@@ -200,6 +202,13 @@ namespace ComputerVision.Entities
             }
 
             this.Unlock(false);
+
+            RedMinimumValue = minR;
+            RedMaximumValue = maxR;
+            GreenMinimumValue = minG;
+            GreenMaximumValue = maxG;
+            BlueMinimumValue = minB;
+            BlueMaximumValue = maxB;
         }
     }
 }
