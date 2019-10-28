@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using ComputerVision.Entities;
 
 namespace ComputerVision.Logic
@@ -163,15 +164,68 @@ namespace ComputerVision.Logic
             fastImage.Unlock();
         }
 
-        public static void LowPassFiler(FastImage fastImage, FastImage originalFastImage)
+        public static void LowPassFiler(FastImage fastImage, FastImage originalFastImage, int n)
         {
+            if (n < 1)
+            {
+                throw new ArgumentException();
+            }
+
+            var matrix = GetLowPassFilterMatrix(n);
+
             fastImage.Lock();
             originalFastImage.Lock();
 
+            for (int row = 1; row < originalFastImage.Width - 2; row++)
+            {
+                for (int column = 0; column < originalFastImage.Height; column++)
+                {
+                    var sumRed = 0;
+                    var sumGreen = 0;
+                    var sumBlue = 0;
 
+                    for (int i = row - 1; i <= row + 1; i++)
+                    {
+                        for (int j = column - 1; j < column + 1; j++)
+                        {
+                            var pixel = originalFastImage.GetPixel(i, j);
+                            sumRed += pixel.R * matrix[row - i + 1, column - j + 1];
+                            sumGreen += pixel.G;
+                            sumBlue += pixel.B;
+                        }
+                    }
+
+                    var divide = ((n + 2) * (n + 2));
+                    var newRed = sumRed / divide;
+                    var newGreen = sumGreen / divide;
+                    var newBlue = sumBlue / divide;
+                    var newColor = Color.FromArgb(newRed, newGreen, newBlue);
+
+                    fastImage.SetPixel(row, column, newColor);
+                }
+            }
 
             fastImage.Unlock();
             fastImage.Unlock();
+        }
+
+        private static int[,] GetLowPassFilterMatrix(int n)
+        {
+            var matrix = new int[3, 3];
+
+            matrix[0, 0] = 1;
+            matrix[0, 2] = 1;
+            matrix[2, 0] = 1;
+            matrix[2, 2] = 1;
+
+            matrix[0, 1] = n;
+            matrix[1, 0] = n;
+            matrix[1, 2] = n;
+            matrix[2, 1] = n;
+
+            matrix[1, 1] = n * n;
+
+            return matrix;
         }
     }
 }

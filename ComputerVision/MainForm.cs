@@ -113,6 +113,15 @@ namespace ComputerVision
             panelDestination.BackgroundImage = workImage.GetBitMap();
         }
 
+        private void buttonLowPassFilter_Click(object sender, EventArgs e)
+        {
+            var n = (int)numericUpDown1.Value;
+
+            Methods.LowPassFiler(workImage, initialWorkImage, n);
+
+            UpdateWorkImage();
+        }
+
         //private int GetIntensity(byte min, byte max, int a, int b)
         //{
 

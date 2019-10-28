@@ -38,9 +38,13 @@ namespace ComputerVision
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.trackBarDelta = new System.Windows.Forms.TrackBar();
             this.trackBarIntensity = new System.Windows.Forms.TrackBar();
+            this.buttonLowPassFilter = new System.Windows.Forms.Button();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDelta)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarIntensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // panelSource
@@ -76,6 +80,9 @@ namespace ComputerVision
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.numericUpDown1);
+            this.panel1.Controls.Add(this.buttonLowPassFilter);
             this.panel1.Controls.Add(this.buttonEqualization);
             this.panel1.Controls.Add(this.buttonNegativare);
             this.panel1.Controls.Add(this.buttonGrayscale);
@@ -134,6 +141,43 @@ namespace ComputerVision
             this.trackBarIntensity.TabIndex = 5;
             this.trackBarIntensity.ValueChanged += new System.EventHandler(this.TrackBarIntensity_ValueChanged);
             // 
+            // buttonLowPassFilter
+            // 
+            this.buttonLowPassFilter.Location = new System.Drawing.Point(7, 68);
+            this.buttonLowPassFilter.Name = "buttonLowPassFilter";
+            this.buttonLowPassFilter.Size = new System.Drawing.Size(75, 23);
+            this.buttonLowPassFilter.TabIndex = 16;
+            this.buttonLowPassFilter.Text = "Low pass filter";
+            this.buttonLowPassFilter.UseVisualStyleBackColor = true;
+            this.buttonLowPassFilter.Click += new System.EventHandler(this.buttonLowPassFilter_Click);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(109, 68);
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(47, 20);
+            this.numericUpDown1.TabIndex = 17;
+            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(90, 70);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(13, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "n";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,8 +192,10 @@ namespace ComputerVision
             this.Name = "MainForm";
             this.Text = "Form1";
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDelta)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarIntensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -167,6 +213,9 @@ namespace ComputerVision
         private System.Windows.Forms.TrackBar trackBarDelta;
         private System.Windows.Forms.TrackBar trackBarIntensity;
         private System.Windows.Forms.Button buttonEqualization;
+        private System.Windows.Forms.Button buttonLowPassFilter;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }
 
